@@ -16,14 +16,35 @@
  */
 #include QMK_KEYBOARD_H
 
+
+//
+// TRACKBALL CONFIGURATION
+
+// invert vertical scroll direction (makes scrolling more natural,
+// like Apple touchpad direction)
+#define CHARYBDIS_DRAGSCROLL_REVERSE_Y
+
+
+#define CHARYBDIS_POINTER_ACCELERATION_ENABLE
+#define CHARYBDIS_POINTER_ACCELERATION_FACTOR 24
+
+#define CHARYBDIS_MINIMUM_DEFAULT_DPI 1200
+
+
+//
+// KEY CONFIGURATION
+
+
 enum charybdis_keymap_layers {
     LAYER_BASE = 0,
-    LAYER_MOUSE,
-    LAYER_RAISE,
+    LAYER_NAV,
+    LAYER_EMACS,
+    LAYER_SYS,
 };
 
-#define MOUSE MO(LAYER_MOUSE)
-#define RAISE MO(LAYER_RAISE)
+#define NAV TT(LAYER_NAV)
+#define SYS TT(LAYER_SYS)
+#define EMACS TT(LAYER_SYS)
 
 
 
@@ -41,38 +62,56 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LSFT,    KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,       KC_B,    KC_M,    KC_W,    KC_V,    KC_Z, KC_RSFT,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                  KC_BSPC, KC_LGUI, KC_LAPO,     KC_ENT,  KC_SPC,
-                                           KC_LCTL,   MOUSE,      RAISE
+                                  KC_BSPC, KC_LGUI, KC_LAPO,     KC_ENT,  RALT_T(KC_SPC),
+                                           KC_LCTL,   NAV,        EMACS
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
+
+
+  // KC_HOME, KC_PGUP, KC_PGDN,  KC_END
   
-  [LAYER_MOUSE] = LAYOUT_charybdis_4x6(
+  [LAYER_NAV] = LAYOUT_charybdis_4x6(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-       _______, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TILD,
+       _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       _______, KC_HOME, KC_PGUP, KC_PGDN,  KC_END, XXXXXXX,    XXXXXXX, KC_LBRC, KC_LPRN, KC_RPRN, KC_RBRC, _______,
+       _______, KC_LBRC, KC_LPRN, KC_RPRN, KC_RBRC, _______,    _______, LSG(KC_LBRC), LGUI(KC_LEFT), LGUI(KC_RIGHT), LSG(KC_RBRC), _______, 
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       _______, XXXXXXX, KC_BTN2, DRGSCRL, KC_BTN1, KC_LGUI,    KC_BTN1, KC_LEFT,   KC_UP, KC_DOWN, KC_RGHT, _______,
+       _______, _______, KC_BTN2, DRGSCRL, KC_BTN1, _______,    _______, KC_BTN1, DRGSCRL, KC_BTN2, _______, _______,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       _______, KC_LEFT,   KC_UP, KC_DOWN, KC_RGHT, KC_BTN2,    KC_BTN2, DRGSCRL, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+       _______, KC_LEFT,   KC_UP, KC_DOWN, KC_RGHT, _______,    _______, KC_LEFT,   KC_UP, KC_DOWN, KC_RGHT, _______,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                                   _______, _______, _______,    _______,  _______,
                                            _______, XXXXXXX,    XXXXXXX
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_RAISE] = LAYOUT_charybdis_4x6(
+  [LAYER_EMACS] = LAYOUT_charybdis_4x6(
   // ╭──────────-────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
         KC_F12,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,      KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
   // ├───────────-───────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        RGB_MOD,  _______, _______, _______, _______, XXXXXXX,    XXXXXXX, _______, _______, _______, _______, KC_VOLU,
   // ├────────────-──────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       RGB_TOG,  _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, KC_MUTE,
+       RGB_TOG,  _______, _______, KC_LBRC, KC_LPRN, _______,    _______, KC_RPRN, KC_RBRC, _______, _______, KC_MUTE,
   // ├─────────────-─────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        RGB_RMOD, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, KC_VOLD,
   // ╰──────────────-────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                                    KC_DEL, _______, _______,    _______, _______,
                                            _______, XXXXXXX,    XXXXXXX
+  //                            ╰────-───────────────────────╯ ╰──────────────────╯
+  ),
+
+  [LAYER_SYS] = LAYOUT_charybdis_4x6(
+  // ╭──────────-────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
+        KC_F12,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,      KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
+  // ├───────────-───────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       RGB_MOD,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_VOLU,
+  // ├────────────-──────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       RGB_TOG,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MUTE,
+  // ├─────────────-─────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       RGB_RMOD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_VOLD,
+  // ╰──────────────-────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
+                                   XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX,
+                                           XXXXXXX, XXXXXXX,    XXXXXXX
   //                            ╰────-───────────────────────╯ ╰──────────────────╯
   ),
 };
